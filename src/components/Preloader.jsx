@@ -18,6 +18,8 @@ const Preloader = ({ onFinished }) => {
 
   useEffect(() => {
     let loadedCount = 0;
+    let timeout1, timeout2;
+    const images = [];
 
     const handleImageLoad = () => {
       loadedCount++;
@@ -25,10 +27,10 @@ const Preloader = ({ onFinished }) => {
 
       if (loadedCount === HERO_IMAGES.length) {
         // Show 100% briefly, then trigger wave split
-        setTimeout(() => {
+        timeout1 = setTimeout(() => {
           setIsSplitting(true);
           // After split animation completes, remove preloader
-          setTimeout(() => {
+          timeout2 = setTimeout(() => {
             setIsDone(true);
             onFinished();
           }, 1200);
@@ -39,6 +41,7 @@ const Preloader = ({ onFinished }) => {
     HERO_IMAGES.forEach((src) => {
       const img = new Image();
       img.src = src;
+      images.push(img);
       if (img.complete) {
         handleImageLoad();
       } else {
@@ -46,6 +49,15 @@ const Preloader = ({ onFinished }) => {
         img.onerror = handleImageLoad;
       }
     });
+
+    return () => {
+      images.forEach((img) => {
+        img.onload = null;
+        img.onerror = null;
+      });
+      clearTimeout(timeout1);
+      clearTimeout(timeout2);
+    };
   }, [onFinished]);
 
   if (isDone) return null;
