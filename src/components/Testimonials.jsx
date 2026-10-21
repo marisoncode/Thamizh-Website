@@ -18,14 +18,16 @@ const Testimonials = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
+    if (isPaused) return;
     const timer = setInterval(() => {
       setDirection(1);
       setCurrentIndex((prevIndex) => (prevIndex === reviews.length - 1 ? 0 : prevIndex + 1));
     }, 5000);
     return () => clearInterval(timer);
-  }, [reviews.length]);
+  }, [reviews.length, isPaused]);
 
   const handleNext = () => {
     setDirection(1);
@@ -39,26 +41,33 @@ const Testimonials = () => {
 
   const variants = {
     enter: (direction) => ({
-      x: direction > 0 ? 100 : -100,
+      x: direction > 0 ? 80 : -80,
       opacity: 0,
-      scale: 0.95,
+      scale: 0.98,
     }),
     center: {
       x: 0,
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.5, ease: "easeOut" }
+      transition: { duration: 0.4, ease: "easeOut" }
     },
     exit: (direction) => ({
-      x: direction < 0 ? 100 : -100,
+      x: direction < 0 ? 80 : -80,
       opacity: 0,
-      scale: 0.95,
-      transition: { duration: 0.3, ease: "easeIn" }
+      scale: 0.98,
+      transition: { duration: 0.25, ease: "easeIn" }
     })
   };
 
   return (
-    <section id="testimonials" className="py-24 bg-deepBlue relative overflow-visible">
+    <section 
+      id="testimonials" 
+      className="py-24 bg-deepBlue relative overflow-visible"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={() => setIsPaused(false)}
+    >
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="text-center mb-16">
           <motion.h2 
@@ -83,6 +92,7 @@ const Testimonials = () => {
           {/* Left Arrow */}
           <button 
             onClick={handlePrev}
+            aria-label="Previous testimonial"
             className="absolute left-0 md:-left-12 z-20 w-12 h-12 bg-white/10 hover:bg-white text-white hover:text-deepBlue rounded-full flex items-center justify-center backdrop-blur-md transition-all shadow-lg"
           >
             <FaChevronLeft className="text-xl -ml-1" />
@@ -117,6 +127,7 @@ const Testimonials = () => {
           {/* Right Arrow */}
           <button 
             onClick={handleNext}
+            aria-label="Next testimonial"
             className="absolute right-0 md:-right-12 z-20 w-12 h-12 bg-white/10 hover:bg-white text-white hover:text-deepBlue rounded-full flex items-center justify-center backdrop-blur-md transition-all shadow-lg"
           >
             <FaChevronRight className="text-xl -mr-1" />
@@ -136,7 +147,7 @@ const Testimonials = () => {
               className={`transition-all duration-300 rounded-full ${
                 index === currentIndex ? 'w-8 h-3 bg-vibrantAccent' : 'w-3 h-3 bg-white/30 hover:bg-white/60'
               }`}
-              aria-label={`Go to slide ${index + 1}`}
+              aria-label={`Go to testimonial ${index + 1}`}
             />
           ))}
         </div>

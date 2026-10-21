@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import ownerImg from '../assets/media__1782216943734.jpg';
-
+import ownerImg from '../assets/media__1782216943734.webp';
 
 const Owner = () => {
   return (
@@ -23,7 +22,10 @@ const Owner = () => {
               <div className="absolute inset-0 bg-oceanBlue rounded-full blur-2xl opacity-30 transform translate-x-4 translate-y-4"></div>
               <img 
                 src={ownerImg} 
-                alt="Founder and Owner" 
+                alt="Founder and Owner of East Coast Surf and Paddle" 
+                loading="lazy"
+                width={320}
+                height={320}
                 className="relative z-10 w-64 h-64 md:w-80 md:h-80 object-cover rounded-full border-4 border-white shadow-2xl" 
               />
             </div>
@@ -46,7 +48,7 @@ const Owner = () => {
               </p>
             </div>
             <div>
-              <h4 className="font-bold text-oceanBlue text-xl">Founder & Owner</h4>
+              <h4 className="font-bold text-oceanBlue text-xl">Founder & Lead Coach</h4>
               <p className="text-gray-500 font-medium">East Coast Surf and Paddle</p>
             </div>
           </motion.div>

@@ -1,15 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-import surfingImg from '../assets/surfing.png';
-import supImg from '../assets/standup_paddle.png';
-import singleKayakImg from '../assets/single_kayaking.png';
-import doubleKayakImg from '../assets/double_kayaking.png';
-import kayak3D from '../assets/kayak_3d.png';
-import dolphinImg from '../assets/CroppedDolphine.png';
-import kidKayakImg from '../assets/kidkayak.png';
-import manKayakImg from '../assets/mankayak.png';
-import manSurfImg from '../assets/mansurf.png';
+import surfingImg from '../assets/surfing.webp';
+import supImg from '../assets/standup_paddle.webp';
+import singleKayakImg from '../assets/single_kayaking.webp';
+import doubleKayakImg from '../assets/double_kayaking.webp';
+import kidKayakImg from '../assets/kidkayak.webp';
+import manKayakImg from '../assets/mankayak.webp';
+import manSurfImg from '../assets/mansurf.webp';
 
 const AdventureCard = ({ adv, index }) => (
   <motion.div
@@ -25,6 +23,8 @@ const AdventureCard = ({ adv, index }) => (
         src={adv.image} 
         alt={`${adv.title} in Puducherry`} 
         loading="lazy"
+        width={400}
+        height={256}
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
       />
       {/* Price Badge (Top Right) */}
@@ -115,6 +115,9 @@ const Adventures = () => {
             src={manSurfImg}
             alt="Man Surfing"
             aria-hidden="true"
+            loading="lazy"
+            width={224}
+            height={224}
             className="block mx-auto mb-2 md:absolute md:mb-0 md:-top-16 lg:-top-24 md:left-0 lg:left-10 w-28 sm:w-36 md:w-48 lg:w-56 object-contain drop-shadow-2xl z-20 pointer-events-none"
             style={{ transform: 'scaleX(-1)' }}
           />
@@ -151,6 +154,9 @@ const Adventures = () => {
               src={manKayakImg}
               alt="Man Kayaking"
               aria-hidden="true"
+              loading="lazy"
+              width={224}
+              height={224}
               className="w-28 sm:w-36 md:w-48 lg:w-56 object-contain drop-shadow-2xl z-20 pointer-events-none md:absolute md:-top-10 lg:-top-20 md:left-0 lg:left-10"
               style={{ transform: 'scaleX(-1)' }}
             />
@@ -158,6 +164,9 @@ const Adventures = () => {
               src={kidKayakImg}
               alt="Kid Kayaking"
               aria-hidden="true"
+              loading="lazy"
+              width={224}
+              height={224}
               className="w-28 sm:w-36 md:w-48 lg:w-56 object-contain drop-shadow-2xl z-20 pointer-events-none md:absolute md:-top-10 lg:-top-20 md:right-0 lg:right-10"
             />
           </div>

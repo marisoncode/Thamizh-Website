@@ -2,11 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
 
-import heroBg from '../assets/elegant_hero_bg.png';
-import surfingImg from '../assets/surfing.png';
-import supImg from '../assets/standup_paddle.png';
-import singleKayakImg from '../assets/single_kayaking.png';
-import doubleKayakImg from '../assets/double_kayaking.png';
+import heroBg from '../assets/elegant_hero_bg.webp';
+import surfingImg from '../assets/surfing.webp';
+import supImg from '../assets/standup_paddle.webp';
+import singleKayakImg from '../assets/single_kayaking.webp';
+import doubleKayakImg from '../assets/double_kayaking.webp';
 
 const Hero = () => {
   const whatsappUrl = "https://wa.me/919791351801?text=Hello%20East%20Coast%20Surf%20and%20Paddle%2C%0A%0AI%20came%20across%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20ocean%20adventures%20and%20pricing.%0A%0APlease%20share%20the%20details.%0A%0AThank%20you.";
@@ -95,7 +95,14 @@ const Hero = () => {
                 className="relative rounded-2xl overflow-hidden shadow-2xl group cursor-pointer border-2 border-white/20 hover:border-turquoise hover:shadow-[0_0_20px_rgba(37,211,102,0.5)] transition-all duration-300"
                 style={{ height: '80%' }}
               >
-                <img src={card.img} alt={`${card.title} classes in Puducherry`} loading="eager" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <img 
+                  src={card.img} 
+                  alt={`${card.title} classes in Puducherry`} 
+                  loading={idx < 2 ? "eager" : "lazy"}
+                  width={300}
+                  height={400}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-center">
                   <h3 className="text-white font-bold text-lg">{card.title}</h3>

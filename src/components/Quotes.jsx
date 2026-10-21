@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaQuoteLeft } from 'react-icons/fa';
-import dolphinImg from '../assets/CroppedDolphine.png';
+import dolphinImg from '../assets/CroppedDolphine.webp';
 
 const Quotes = () => {
   const quotes = [
@@ -15,13 +15,13 @@ const Quotes = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2 }
+      transition: { staggerChildren: 0.15 }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: 50 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 10 } }
+    hidden: { opacity: 0, scale: 0.9, y: 30 },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };
 
   return (
@@ -31,6 +31,9 @@ const Quotes = () => {
         src={dolphinImg}
         alt="Dolphin"
         aria-hidden="true"
+        loading="lazy"
+        width={224}
+        height={224}
         className="absolute right-4 sm:right-10 top-0 sm:top-2 lg:top-4 w-28 sm:w-36 md:w-48 lg:w-56 object-contain drop-shadow-2xl z-10 pointer-events-none"
       />
       {/* Stable Dolphin 2 (Left side) */}
@@ -38,6 +41,9 @@ const Quotes = () => {
         src={dolphinImg}
         alt="Dolphin"
         aria-hidden="true"
+        loading="lazy"
+        width={224}
+        height={224}
         className="absolute left-4 sm:left-10 top-0 sm:top-2 lg:top-4 w-28 sm:w-36 md:w-48 lg:w-56 object-contain drop-shadow-2xl z-10 pointer-events-none"
         style={{ transform: 'scaleX(-1)' }}
       />
@@ -53,13 +59,8 @@ const Quotes = () => {
             <motion.div 
               key={index}
               variants={itemVariants}
-              whileHover={{ y: -15, scale: 1.05 }}
-              animate={{ y: [0, -8, 0] }}
-              transition={{ 
-                y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
-                scale: { duration: 0.2 }
-              }}
-              className={`rounded-3xl p-10 relative overflow-visible ${quote.bg} group hover:-translate-y-4 hover:scale-105 transition-all duration-300`}
+              whileHover={{ y: -8, scale: 1.02 }}
+              className={`rounded-3xl p-10 relative overflow-visible ${quote.bg} group transition-all duration-300`}
             >
               {/* Quote Icon */}
               <div className={`absolute -top-6 -left-4 ${quote.color} text-7xl drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)]`}>

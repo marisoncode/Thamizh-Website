@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlay, FaTimes } from 'react-icons/fa';
 
-import img1 from '../assets/media__1782216942418.jpg';
-import img2 from '../assets/media__1782216942503.jpg';
-import img3 from '../assets/media__1782216943739.jpg';
-import img4 from '../assets/media__1782216943734.jpg';
+import img1 from '../assets/media__1782216942418.webp';
+import img2 from '../assets/media__1782216942503.webp';
+import img3 from '../assets/media__1782216943739.webp';
+import img4 from '../assets/media__1782216943734.webp';
 
-// Mock data: This structure allows you to drop in hundreds of images/videos easily.
+// Media gallery dataset
 const galleryData = [
   { id: 1, type: 'image', category: 'Surfing', src: img1, alt: "Surfing the waves" },
   { id: 2, type: 'image', category: 'Nature', src: img2, alt: "Beautiful coastal nature" },
   { id: 3, type: 'image', category: 'Paddling', src: img3, alt: "Paddling in the lake" },
   { id: 4, type: 'image', category: 'Surfing', src: img4, alt: "Catching a massive wave" },
-  { id: 5, type: 'video', category: 'Videos', src: img1, alt: "Surfing Tutorial Highlights" }, // Video thumbnail
+  { id: 5, type: 'video', category: 'Videos', src: img1, alt: "Surfing Tutorial Highlights" },
   { id: 6, type: 'image', category: 'Paddling', src: img2, alt: "Sunrise paddle session" },
   { id: 7, type: 'image', category: 'Nature', src: img3, alt: "Ocean views at dusk" },
   { id: 8, type: 'image', category: 'Surfing', src: img4, alt: "Surf camp group photo" },
@@ -28,26 +28,23 @@ const galleryData = [
 ];
 
 const categories = ["All", "Surfing", "Paddling", "Nature", "Videos"];
-const ITEMS_PER_PAGE = 8; // Number of items to load at a time
+const ITEMS_PER_PAGE = 8;
 
 const Gallery = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [selectedMedia, setSelectedMedia] = useState(null);
 
-  // Filter the data based on the active tab
   const filteredData = activeFilter === "All" 
     ? galleryData 
     : galleryData.filter(item => item.category === activeFilter);
 
-  // Get only the items that should be visible based on visibleCount
   const visibleData = filteredData.slice(0, visibleCount);
-  
   const hasMore = visibleCount < filteredData.length;
 
   const handleFilterChange = (category) => {
     setActiveFilter(category);
-    setVisibleCount(ITEMS_PER_PAGE); // Reset pagination when filter changes
+    setVisibleCount(ITEMS_PER_PAGE);
   };
 
   const handleLoadMore = () => {
@@ -103,19 +100,20 @@ const Gallery = () => {
             {visibleData.map((item) => (
               <motion.div
                 layout
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.4 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
                 key={item.id}
                 onClick={() => setSelectedMedia(item)}
                 className="group relative rounded-2xl overflow-hidden shadow-md cursor-pointer aspect-square bg-gray-200"
               >
-                {/* Lazy Loading Implemented Native via loading="lazy" */}
                 <img 
                   src={item.src} 
                   alt={item.alt}
                   loading="lazy"
+                  width={300}
+                  height={300}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 
@@ -169,6 +167,7 @@ const Gallery = () => {
           >
             {/* Close Button */}
             <button 
+              aria-label="Close media preview"
               className="absolute top-6 right-6 text-white/70 hover:text-white bg-black/50 hover:bg-black/80 rounded-full p-3 transition-all z-50"
               onClick={(e) => {
                 e.stopPropagation();
@@ -183,7 +182,7 @@ const Gallery = () => {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               className="relative max-w-5xl w-full max-h-full flex items-center justify-center"
-              onClick={(e) => e.stopPropagation()} // Prevent clicking image from closing modal
+              onClick={(e) => e.stopPropagation()}
             >
               {selectedMedia.type === 'image' ? (
                 <img 
@@ -193,12 +192,11 @@ const Gallery = () => {
                 />
               ) : (
                 <div className="w-full aspect-video bg-black rounded-lg shadow-2xl flex items-center justify-center border border-white/10 relative overflow-hidden">
-                  {/* Replace this with actual <video> tag when real videos are added */}
-                  <img src={selectedMedia.src} className="w-full h-full object-cover opacity-50 blur-sm" />
+                  <img src={selectedMedia.src} alt={selectedMedia.alt} className="w-full h-full object-cover opacity-50 blur-sm" />
                   <div className="absolute flex flex-col items-center">
                     <FaPlay className="text-white text-6xl mb-4 opacity-80" />
-                    <p className="text-white text-xl">Video Player Placeholder</p>
-                    <p className="text-white/70 text-sm mt-2">Replace with actual .mp4 source</p>
+                    <p className="text-white text-xl">Video Highlights</p>
+                    <p className="text-white/70 text-sm mt-2">{selectedMedia.alt}</p>
                   </div>
                 </div>
               )}

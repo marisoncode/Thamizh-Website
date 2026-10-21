@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-scroll';
-import { FaFacebookF, FaInstagram, FaTwitter, FaWater, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaWater, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 import { BsWhatsapp } from 'react-icons/bs';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear(); // or hardcode 2026 as per prompt
+  const currentYear = new Date().getFullYear();
+  const whatsappUrl = "https://wa.me/919791351801?text=Hello%20East%20Coast%20Surf%20and%20Paddle%2C%0A%0AI%20came%20across%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20ocean%20adventures%20and%20pricing.%0A%0APlease%20share%20the%20details.%0A%0AThank%20you.";
 
   return (
     <footer className="bg-slate-900 text-white pt-16 pb-8 border-t-4 border-vibrantAccent">
@@ -23,11 +24,14 @@ const Footer = () => {
             <div className="text-gray-400 text-sm space-y-3">
               <p className="flex items-center gap-3 justify-center md:justify-start">
                 <FaPhoneAlt className="text-vibrantAccent text-lg" />
-                9791351801, 9344702133
+                <a href="tel:+919791351801" className="hover:text-white transition-colors">9791351801</a>,
+                <a href="tel:+919344702133" className="hover:text-white transition-colors">9344702133</a>
               </p>
               <p className="flex items-center gap-3 justify-center md:justify-start">
                 <FaEnvelope className="text-vibrantAccent text-lg" />
-                eastcoastsurfeastcoastsurf@gmail.com
+                <a href="mailto:eastcoastsurfeastcoastsurf@gmail.com" className="hover:text-white transition-colors break-all">
+                  eastcoastsurfeastcoastsurf@gmail.com
+                </a>
               </p>
               <p className="flex items-start gap-3 justify-center md:justify-start">
                 <FaMapMarkerAlt className="text-vibrantAccent text-lg mt-1 flex-shrink-0" />
@@ -70,22 +74,43 @@ const Footer = () => {
 
           {/* Social Media */}
           <div className="text-center md:text-left">
-            <h4 className="text-xl font-bold mb-6 text-lightCyan">Follow Us</h4>
+            <h4 className="text-xl font-bold mb-6 text-lightCyan">Connect With Us</h4>
             <div className="flex gap-4 justify-center md:justify-start">
-              <a href="#" aria-label="Visit our Facebook page" className="bg-white/10 p-3 rounded-full hover:bg-[#1877F2] hover:text-white transition-colors text-xl">
-                <FaFacebookF aria-hidden="true" />
+              <a 
+                href={whatsappUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="Chat with us on WhatsApp" 
+                className="bg-white/10 p-3 rounded-full hover:bg-[#25D366] hover:text-white transition-colors text-xl"
+              >
+                <BsWhatsapp aria-hidden="true" />
               </a>
-              <a href="#" aria-label="Visit our Instagram page" className="bg-white/10 p-3 rounded-full hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white transition-all text-xl">
+              <a 
+                href="https://www.instagram.com/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="Visit our Instagram page" 
+                className="bg-white/10 p-3 rounded-full hover:bg-gradient-to-r hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white transition-all text-xl"
+              >
                 <FaInstagram aria-hidden="true" />
               </a>
-              <a href="#" aria-label="Visit our Twitter page" className="bg-white/10 p-3 rounded-full hover:bg-[#1DA1F2] hover:text-white transition-colors text-xl">
-                <FaTwitter aria-hidden="true" />
+              <a 
+                href="https://www.facebook.com/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="Visit our Facebook page" 
+                className="bg-white/10 p-3 rounded-full hover:bg-[#1877F2] hover:text-white transition-colors text-xl"
+              >
+                <FaFacebookF aria-hidden="true" />
               </a>
-              <a href="#" aria-label="Visit our YouTube channel" className="bg-white/10 p-3 rounded-full hover:bg-[#FF0000] hover:text-white transition-colors text-xl">
+              <a 
+                href="https://www.youtube.com/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="Visit our YouTube channel" 
+                className="bg-white/10 p-3 rounded-full hover:bg-[#FF0000] hover:text-white transition-colors text-xl"
+              >
                 <FaYoutube aria-hidden="true" />
-              </a>
-              <a href="#" aria-label="Contact us on WhatsApp" className="bg-white/10 p-3 rounded-full hover:bg-[#25D366] hover:text-white transition-colors text-xl">
-                <BsWhatsapp aria-hidden="true" />
               </a>
             </div>
           </div>

@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import logo from '../assets/logo.png';
-
-// Import hero images so they get preloaded
-import heroBg from '../assets/elegant_hero_bg.png';
-import surfingImg from '../assets/surfing.png';
-import supImg from '../assets/standup_paddle.png';
-import singleKayakImg from '../assets/single_kayaking.png';
-import doubleKayakImg from '../assets/double_kayaking.png';
-
-const HERO_IMAGES = [heroBg, surfingImg, supImg, singleKayakImg, doubleKayakImg];
+import logo from '../assets/logo.webp';
+import heroBg from '../assets/elegant_hero_bg.webp';
 
 const Preloader = ({ onFinished }) => {
   const [progress, setProgress] = useState(0);
@@ -17,46 +9,34 @@ const Preloader = ({ onFinished }) => {
   const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
-    let loadedCount = 0;
-    let timeout1, timeout2;
-    const images = [];
+    // Quick, responsive preloader that ensures smooth experience without penalizing LCP
+    let timer1;
+    let timer2;
+    let timer3;
 
-    const handleImageLoad = () => {
-      loadedCount++;
-      setProgress(Math.round((loadedCount / HERO_IMAGES.length) * 100));
+    // Preload hero background image
+    const img = new Image();
+    img.src = heroBg;
 
-      if (loadedCount === HERO_IMAGES.length) {
-        // Show 100% briefly, then trigger wave split
-        timeout1 = setTimeout(() => {
-          setIsSplitting(true);
-          // After split animation completes, remove preloader
-          timeout2 = setTimeout(() => {
-            setIsDone(true);
-            onFinished();
-          }, 1200);
-        }, 500);
-      }
-    };
-
-    HERO_IMAGES.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-      images.push(img);
-      if (img.complete) {
-        handleImageLoad();
-      } else {
-        img.onload = handleImageLoad;
-        img.onerror = handleImageLoad;
-      }
-    });
+    // Fast, smooth progress transition
+    setProgress(45);
+    timer1 = setTimeout(() => {
+      setProgress(100);
+      timer2 = setTimeout(() => {
+        setIsSplitting(true);
+        timer3 = setTimeout(() => {
+          setIsDone(true);
+          onFinished();
+        }, 700);
+      }, 250);
+    }, 300);
 
     return () => {
-      images.forEach((img) => {
-        img.onload = null;
-        img.onerror = null;
-      });
-      clearTimeout(timeout1);
-      clearTimeout(timeout2);
+      img.onload = null;
+      img.onerror = null;
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
     };
   }, [onFinished]);
 
@@ -69,11 +49,10 @@ const Preloader = ({ onFinished }) => {
       <motion.div
         initial={{ y: 0 }}
         animate={{ y: isSplitting ? '-100%' : 0 }}
-        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
         className="absolute top-0 left-0 w-full h-1/2 z-[9999]"
       >
         <div className="w-full h-full bg-gradient-to-b from-[#03045e] to-[#0077b6] relative">
-          {/* Wavy bottom edge */}
           <svg
             viewBox="0 0 1440 120"
             preserveAspectRatio="none"
@@ -99,11 +78,10 @@ const Preloader = ({ onFinished }) => {
       <motion.div
         initial={{ y: 0 }}
         animate={{ y: isSplitting ? '100%' : 0 }}
-        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
         className="absolute bottom-0 left-0 w-full h-1/2 z-[9999]"
       >
         <div className="w-full h-full bg-gradient-to-t from-[#03045e] to-[#0077b6] relative">
-          {/* Wavy top edge */}
           <svg
             viewBox="0 0 1440 120"
             preserveAspectRatio="none"
@@ -129,22 +107,21 @@ const Preloader = ({ onFinished }) => {
       <AnimatePresence>
         {isSplitting && (
           <>
-            {[...Array(12)].map((_, i) => (
+            {[...Array(8)].map((_, i) => (
               <motion.div
                 key={i}
                 initial={{ 
                   opacity: 1,
-                  x: `${10 + Math.random() * 80}vw`,
+                  x: `${15 + i * 10}vw`,
                   y: '50%',
-                  scale: 0.5 + Math.random() * 0.5
+                  scale: 0.6
                 }}
                 animate={{ 
                   opacity: 0,
-                  y: `${i % 2 === 0 ? -20 - Math.random() * 30 : 120 + Math.random() * 30}%`,
-                  x: `${10 + Math.random() * 80}vw`,
+                  y: `${i % 2 === 0 ? -30 : 130}%`,
                   scale: 0
                 }}
-                transition={{ duration: 0.8 + Math.random() * 0.4, ease: 'easeOut' }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
                 className="absolute z-[10000] w-2 h-2 sm:w-3 sm:h-3 bg-white/60 rounded-full blur-[1px]"
               />
             ))}
@@ -156,36 +133,22 @@ const Preloader = ({ onFinished }) => {
       <motion.div
         animate={{ 
           opacity: isSplitting ? 0 : 1,
-          scale: isSplitting ? 1.3 : 1
+          scale: isSplitting ? 1.15 : 1
         }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
         className="absolute inset-0 z-[10001] flex flex-col items-center justify-center pointer-events-none"
       >
-        {/* Floating bubbles background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div
-            animate={{ x: ['-10%', '10%', '-10%'], y: ['5%', '-5%', '5%'] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -bottom-20 -left-20 w-[600px] h-[600px] rounded-full bg-white/5"
-          />
-          <motion.div
-            animate={{ x: ['10%', '-10%', '10%'], y: ['-3%', '3%', '-3%'] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-white/5"
-          />
-        </div>
-
         {/* Logo with spinning rings */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
+          initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, type: 'spring', stiffness: 100 }}
+          transition={{ duration: 0.5, type: 'spring', stiffness: 120 }}
           className="relative z-10 flex items-center justify-center"
         >
           {/* Rotating outer ring */}
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
             className="absolute w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64"
           >
             <svg viewBox="0 0 200 200" className="w-full h-full">
@@ -199,10 +162,10 @@ const Preloader = ({ onFinished }) => {
             </svg>
           </motion.div>
 
-          {/* Rotating inner glow ring (opposite direction) */}
+          {/* Rotating inner glow ring */}
           <motion.div
             animate={{ rotate: -360 }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
             className="absolute"
             style={{ width: '85%', height: '85%' }}
           >
@@ -219,20 +182,20 @@ const Preloader = ({ onFinished }) => {
           </motion.div>
 
           {/* Logo image */}
-          <motion.img
+          <img
             src={logo}
             alt="East Coast Surf and Paddle"
+            width={192}
+            height={192}
             className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.4)] rounded-full relative z-10"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
           />
         </motion.div>
 
         {/* Progress bar */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
           className="relative z-10 mt-8 w-48 sm:w-56"
         >
           <div className="h-1 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">

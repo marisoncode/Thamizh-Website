@@ -39,16 +39,16 @@ function App() {
     },
     "geo": {
       "@type": "GeoCoordinates",
-      "latitude": "11.9686",
-      "longitude": "79.8398"
+      "latitude": "11.9781583",
+      "longitude": "79.8465745"
     },
     "openingHoursSpecification": {
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": [
         "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
       ],
-      "opens": "06:00",
-      "closes": "18:00"
+      "opens": "05:30",
+      "closes": "18:30"
     }
   };
 
@@ -62,15 +62,14 @@ function App() {
           type="website"
           schema={schema}
         />
-        {/* Preloader with logo */}
+        {/* Preloader overlay with logo */}
         <Preloader onFinished={handlePreloaderFinished} />
 
-        {/* Main site content - always in DOM, hidden while loading to prevent layout shift */}
+        {/* Main site content - rendered immediately, seamlessly revealed */}
         <div 
-          className={`relative z-10 flex flex-col min-h-screen transition-opacity duration-500 ${
-            isLoading ? 'opacity-0 overflow-hidden h-0' : 'opacity-100'
+          className={`relative z-10 flex flex-col min-h-screen transition-opacity duration-300 ${
+            isLoading ? 'opacity-95' : 'opacity-100'
           }`}
-          aria-hidden={isLoading}
         >
           <Navbar />
           <main className="flex-grow">
