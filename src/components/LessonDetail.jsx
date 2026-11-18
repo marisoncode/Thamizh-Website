@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaArrowLeft, FaClock, FaArrowRight } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { BsWhatsapp } from 'react-icons/bs';
 import { LESSONS, buildLessonWhatsAppUrl } from '../data/lessons';
 
@@ -54,12 +54,6 @@ const LessonDetail = ({ lesson, onBack, onSelectLesson }) => {
                 <BsWhatsapp className="text-xl" aria-hidden="true" />
                 Book {lesson.title} via WhatsApp
               </a>
-              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/25 px-5 py-3 rounded-full text-sm font-semibold">
-                <FaClock className="text-vibrantAccent" aria-hidden="true" />
-                <span>{lesson.duration}</span>
-                <span className="text-white/40">|</span>
-                <span className="font-bold text-lightCyan">{lesson.startingPrice}</span>
-              </div>
             </div>
           </motion.div>
         </div>
@@ -96,13 +90,6 @@ const LessonDetail = ({ lesson, onBack, onSelectLesson }) => {
                     height={256}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-full shadow font-extrabold text-oceanBlue">
-                    {pkg.price}
-                  </div>
-                  <div className="absolute bottom-4 left-4 bg-deepBlue/90 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1.5">
-                    <FaClock className="text-vibrantAccent text-xs" aria-hidden="true" />
-                    {pkg.duration}
-                  </div>
                 </div>
                 <div className="p-7 flex-grow flex flex-col justify-between">
                   <div>
@@ -157,7 +144,7 @@ const LessonDetail = ({ lesson, onBack, onSelectLesson }) => {
                 />
                 <div className="flex-grow">
                   <span className="text-xs font-bold uppercase tracking-wide text-oceanBlue">
-                    {item.startingPrice}
+                    {item.subtitle}
                   </span>
                   <h3 className="text-xl font-bold text-deepBlue mt-0.5 mb-1">
                     {item.title}

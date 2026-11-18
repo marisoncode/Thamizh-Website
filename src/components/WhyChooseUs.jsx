@@ -32,17 +32,15 @@ const WhyChooseUs = () => {
 
   return (
     <section className="py-20 bg-deepBlue text-white relative overflow-hidden">
-      {/* Decorative floating bubbles for more animation */}
-      <motion.div 
-        animate={{ y: [0, -20, 0], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-10 left-10 w-32 h-32 bg-oceanBlue/30 rounded-full blur-2xl"
-      ></motion.div>
-      <motion.div 
-        animate={{ y: [0, 20, 0], opacity: [0.2, 0.5, 0.2] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-10 right-10 w-48 h-48 bg-turquoise/20 rounded-full blur-3xl"
-      ></motion.div>
+      {/* Static ambient ocean glows (zero continuous blur repaints) */}
+      <div
+        className="absolute top-10 left-10 w-32 h-32 bg-oceanBlue/30 rounded-full blur-2xl pointer-events-none"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute bottom-10 right-10 w-48 h-48 bg-turquoise/20 rounded-full blur-3xl pointer-events-none"
+        aria-hidden="true"
+      />
       <div className="container mx-auto px-6 md:px-12">
         <div className="text-center mb-16">
           <motion.h2 

@@ -21,11 +21,15 @@ const Navbar = ({ isDetailPage = false, onNavigateSection }) => {
   const registrationFormUrl = "https://forms.gle/nUiZFAVKDzUiq4w28";
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+    let rafId = null;
+
+    const updateFromScroll = () => {
+      rafId = null;
+      const nextScrolled = window.scrollY > 50;
+      setScrolled((prev) => (prev === nextScrolled ? prev : nextScrolled));
 
       if (isDetailPage) {
-        setActiveSection('adventures');
+        setActiveSection((prev) => (prev === 'adventures' ? prev : 'adventures'));
         return;
       }
 
@@ -36,11 +40,20 @@ const Navbar = ({ isDetailPage = false, onNavigateSection }) => {
           current = link.to;
         }
       }
-      setActiveSection(current);
+      setActiveSection((prev) => (prev === current ? prev : current));
     };
-    handleScroll();
+
+    const handleScroll = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(updateFromScroll);
+    };
+
+    updateFromScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, [isDetailPage]);
 
   const handleLogoClick = () => {

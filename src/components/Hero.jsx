@@ -1,14 +1,12 @@
 import React from 'react';
-import { motion, useScroll, useSpring, useTransform, useReducedMotion } from 'framer-motion';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-scroll';
 import { FaArrowRight } from 'react-icons/fa';
 
 import heroBg from '../assets/elegant_hero_bg.webp';
-import surfHeroImg from '../assets/Hero Section Images/SURF.jpeg';
-import supHeroImg from '../assets/Hero Section Images/SUPP.jpeg';
-import kayakHeroImg from '../assets/Hero Section Images/KAYAK.jpeg';
-
-const HERO_SPRING = { stiffness: 120, damping: 28, mass: 0.6, restDelta: 0.001 };
+import surfHeroImg from '../assets/Hero Section Images/optimized/SURF.jpg';
+import supHeroImg from '../assets/Hero Section Images/optimized/SUPP.jpg';
+import kayakHeroImg from '../assets/Hero Section Images/optimized/KAYAK.jpg';
 
 const HERO_CARDS = [
   {
@@ -40,8 +38,7 @@ const HERO_CARDS = [
 const Hero = ({ onSelectLesson }) => {
   const shouldReduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
-  const smoothScrollY = useSpring(scrollY, HERO_SPRING);
-  const bgScale = useTransform(smoothScrollY, [0, 700], [1, 1.12]);
+  const bgScale = useTransform(scrollY, [0, 700], [1, 1.1]);
 
   const whatsappUrl = "https://wa.me/919791351801?text=Hello%20East%20Coast%20Surf%20and%20Paddle%2C%0A%0AI%20came%20across%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20ocean%20adventures%20and%20pricing.%0A%0APlease%20share%20the%20details.%0A%0AThank%20you.";
 
@@ -118,7 +115,7 @@ const Hero = ({ onSelectLesson }) => {
         {/* Right: 3 Clean Editorial Lesson Cards (Surf, SUP, Kayak) */}
         <div className="lg:w-1/2 w-full">
           <div className="grid grid-cols-3 gap-3 sm:gap-4 h-[230px] sm:h-[310px] md:h-[380px] lg:h-[420px]">
-            {HERO_CARDS.map((card, idx) => (
+            {HERO_CARDS.map((card) => (
               <div key={card.lessonSlug} className={`h-full ${card.staggerClass}`}>
                 <motion.button
                   type="button"
@@ -133,7 +130,8 @@ const Hero = ({ onSelectLesson }) => {
                   <img
                     src={card.img}
                     alt={`${card.title} adventures in Puducherry`}
-                    loading={idx < 2 ? 'eager' : 'lazy'}
+                    loading="eager"
+                    decoding="async"
                     width={300}
                     height={420}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"

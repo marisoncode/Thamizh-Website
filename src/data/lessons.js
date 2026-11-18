@@ -1,8 +1,7 @@
-// Temporary placeholders using existing assets until new images are added
-import surfingImg from '../assets/media__1782216943734.webp';
-import supImg from '../assets/elegant_hero_bg.webp';
-import singleKayakImg from '../assets/mankayak.webp';
-import doubleKayakImg from '../assets/kidkayak.webp';
+import surfingImg from '../assets/Hero Section Images/optimized/SURF.jpg';
+import supImg from '../assets/Hero Section Images/optimized/SUPP.jpg';
+import singleKayakImg from '../assets/Hero Section Images/optimized/KAYAK.jpg';
+import doubleKayakImg from '../assets/Hero Section Images/optimized/KAYAK.jpg';
 
 export const WHATSAPP_BASE_URL = 'https://wa.me/919791351801';
 
@@ -17,8 +16,6 @@ export const LESSONS = [
     title: 'Surfing',
     subtitle: 'Group & Private Wave Coaching',
     image: surfingImg,
-    startingPrice: 'From Rs. 1600',
-    duration: '90 mins',
     shortDescription:
       'Catch your first wave or level up your technique with certified instructors in Pondicherry.',
     heroDescription:
@@ -27,16 +24,12 @@ export const LESSONS = [
       {
         id: 'surf-group',
         name: 'Group Surfing Lessons',
-        price: 'Rs. 1600',
-        duration: '90 mins',
         image: surfingImg,
         description: 'Learn to ride the waves in a fun group environment.',
       },
       {
         id: 'surf-private',
         name: 'Private Surfing Lessons',
-        price: 'Rs. 2000',
-        duration: '90 mins',
         image: surfingImg,
         description: 'Get personalized 1-on-1 coaching to master surfing faster.',
       },
@@ -47,8 +40,6 @@ export const LESSONS = [
     title: 'SUP',
     subtitle: 'Stand-Up Paddling Adventures',
     image: supImg,
-    startingPrice: 'Rs. 1800',
-    duration: '90 mins',
     shortDescription:
       'Glide across calm coastal waters and sunrise horizons on a stand-up paddle board.',
     heroDescription:
@@ -57,8 +48,6 @@ export const LESSONS = [
       {
         id: 'sup-standard',
         name: 'Stand-Up Paddling (SUP)',
-        price: 'Rs. 1800',
-        duration: '90 mins',
         image: supImg,
         description: 'Enjoy peaceful paddling while exploring the beauty of the sea.',
       },
@@ -69,8 +58,6 @@ export const LESSONS = [
     title: 'Kayaking',
     subtitle: 'Sea & Mangrove Kayaking',
     image: doubleKayakImg,
-    startingPrice: 'From Rs. 1200',
-    duration: '90 mins',
     shortDescription:
       'Explore scenic Pondicherry coastlines and tranquil mangrove trails solo or with a partner.',
     heroDescription:
@@ -79,32 +66,24 @@ export const LESSONS = [
       {
         id: 'kayak-sea-single',
         name: 'Single Seater Sea Kayaking',
-        price: 'Rs. 1500',
-        duration: '90 mins',
         image: singleKayakImg,
         description: 'Perfect for solo adventurers who love exploring the water.',
       },
       {
         id: 'kayak-sea-double',
         name: 'Double Seater Sea Kayaking',
-        price: 'Rs. 2500',
-        duration: '90 mins',
         image: doubleKayakImg,
         description: 'Share the adventure and enjoy memorable moments together.',
       },
       {
         id: 'kayak-mangrove-single',
         name: 'Mangrove Single Seater',
-        price: 'Rs. 1200',
-        duration: '90 mins',
         image: singleKayakImg,
         description: 'Explore the serene mangroves at your own pace.',
       },
       {
         id: 'kayak-mangrove-double',
         name: 'Mangrove Double Seater',
-        price: 'Rs. 2500',
-        duration: '90 mins',
         image: doubleKayakImg,
         description: 'Paddle through the beautiful mangroves with a partner.',
       },

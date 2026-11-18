@@ -1,15 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useSpring, useTransform, useReducedMotion } from 'framer-motion';
-
-const COVER_SPRING = { stiffness: 120, damping: 28, mass: 0.6, restDelta: 0.001 };
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 
 /**
- * Wraps a page section in a sticky stacking curtain panel:
+ * Wraps a page section in a lightweight sticky stacking curtain panel:
  * - Sections <= viewport height pin at the top while the next section rises over them.
  * - Taller sections scroll naturally to their bottom before pinning (top = vh - height),
  *   so no content is ever cut off or unreachable.
- * - Optional `id` is placed on a non-sticky sentinel before the panel so smooth anchor
- *   scrolling (react-scroll) always lands at the exact document position.
+ * - Avoids scaling entire multi-viewport DOM trees or permanent `will-change` promotion,
+ *   keeping GPU memory and scroll compositing fast at 60/120fps.
  */
 const StickySection = ({
   children,
@@ -30,9 +28,8 @@ const StickySection = ({
     const updateStickyTop = () => {
       const vh = window.innerHeight;
       const height = el.offsetHeight;
-      // Pin at top (0) if section fits in viewport; otherwise allow full scrolling
-      // through the section and lock right when its bottom hits the viewport bottom.
-      setStickyTop(Math.min(0, Math.floor(vh - height)));
+      const nextTop = Math.min(0, Math.floor(vh - height));
+      setStickyTop((prev) => (prev === nextTop ? prev : nextTop));
     };
 
     updateStickyTop();
@@ -52,12 +49,9 @@ const StickySection = ({
     target: endSentinelRef,
     offset: ['start end', 'start start'],
   });
-  const smoothCover = useSpring(scrollYProgress, COVER_SPRING);
 
-  // Gracefully scale back and softly dim this section as the next section covers it
-  const panelScale = useTransform(smoothCover, [0.25, 1], [1, 0.96]);
-  const scrimOpacity = useTransform(smoothCover, [0.25, 1], [0, 0.32]);
-
+  // Pure GPU-composited opacity scrim — zero full-page re-rasterization
+  const scrimOpacity = useTransform(scrollYProgress, [0.2, 1], [0, 0.28]);
   const animateCover = !isLast && !shouldReduceMotion;
 
   return (
@@ -77,13 +71,10 @@ const StickySection = ({
           zIndex,
         }}
         className={`sticky w-full ${
-          isFirst ? '' : 'shadow-[0_-18px_50px_rgba(0,0,0,0.2)]'
+          isFirst ? '' : 'shadow-[0_-8px_24px_rgba(0,0,0,0.14)]'
         }`}
       >
-        <motion.div
-          style={animateCover ? { scale: panelScale, transformOrigin: 'center top' } : undefined}
-          className="relative w-full will-change-transform"
-        >
+        <div className="relative w-full">
           {children}
 
           {animateCover && (
@@ -93,7 +84,7 @@ const StickySection = ({
               aria-hidden="true"
             />
           )}
-        </motion.div>
+        </div>
       </div>
 
       {/* Non-sticky boundary marker marking where the next section starts rising */}

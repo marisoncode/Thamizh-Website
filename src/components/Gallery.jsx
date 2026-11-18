@@ -3,33 +3,23 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { FaPlay, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-// Temporary placeholders using existing assets until new images are added
-import img1 from '../assets/media__1782216943734.webp';
-import img2 from '../assets/elegant_hero_bg.webp';
-import img3 from '../assets/mankayak.webp';
-import img4 from '../assets/media__1782216943734.webp';
-import surfingImg from '../assets/mansurf.webp';
-import supImg from '../assets/elegant_hero_bg.webp';
-import singleKayakImg from '../assets/mankayak.webp';
-import doubleKayakImg from '../assets/kidkayak.webp';
-
-// Media gallery dataset (Surfing, Kayaking & SUP)
+// Media gallery dataset (Surfing, Kayaking & SUP) — add `src` image imports later
 const galleryData = [
-  { id: 1, type: 'image', category: 'Surfing', src: img1, alt: "Surfing the waves" },
-  { id: 2, type: 'image', category: 'Kayaking', src: singleKayakImg, alt: "Single seater sea kayaking" },
-  { id: 3, type: 'image', category: 'SUP', src: supImg, alt: "Stand-up paddling at sunrise" },
-  { id: 4, type: 'image', category: 'Surfing', src: img4, alt: "Catching a massive wave" },
-  { id: 5, type: 'image', category: 'Kayaking', src: doubleKayakImg, alt: "Double seater kayaking adventure" },
-  { id: 6, type: 'image', category: 'SUP', src: img3, alt: "Peaceful morning SUP session" },
-  { id: 7, type: 'image', category: 'Surfing', src: surfingImg, alt: "Beginner surf coaching" },
-  { id: 8, type: 'image', category: 'Kayaking', src: img2, alt: "Mangrove kayaking trail" },
-  { id: 9, type: 'image', category: 'SUP', src: img1, alt: "Group paddle boarding" },
-  { id: 10, type: 'image', category: 'Surfing', src: img2, alt: "Longboard cruising" },
-  { id: 11, type: 'image', category: 'Kayaking', src: img3, alt: "Coastal sea kayaking" },
-  { id: 12, type: 'image', category: 'SUP', src: img4, alt: "Calm water SUP glide" },
-  { id: 13, type: 'image', category: 'Surfing', src: img1, alt: "High tide surf action" },
-  { id: 14, type: 'image', category: 'Kayaking', src: singleKayakImg, alt: "Solo mangrove exploration" },
-  { id: 15, type: 'image', category: 'SUP', src: supImg, alt: "Ocean horizon paddle" }
+  { id: 1, type: 'image', category: 'Surfing', src: null, alt: "Surfing the waves" },
+  { id: 2, type: 'image', category: 'Kayaking', src: null, alt: "Single seater sea kayaking" },
+  { id: 3, type: 'image', category: 'SUP', src: null, alt: "Stand-up paddling at sunrise" },
+  { id: 4, type: 'image', category: 'Surfing', src: null, alt: "Catching a massive wave" },
+  { id: 5, type: 'image', category: 'Kayaking', src: null, alt: "Double seater kayaking adventure" },
+  { id: 6, type: 'image', category: 'SUP', src: null, alt: "Peaceful morning SUP session" },
+  { id: 7, type: 'image', category: 'Surfing', src: null, alt: "Beginner surf coaching" },
+  { id: 8, type: 'image', category: 'Kayaking', src: null, alt: "Mangrove kayaking trail" },
+  { id: 9, type: 'image', category: 'SUP', src: null, alt: "Group paddle boarding" },
+  { id: 10, type: 'image', category: 'Surfing', src: null, alt: "Longboard cruising" },
+  { id: 11, type: 'image', category: 'Kayaking', src: null, alt: "Coastal sea kayaking" },
+  { id: 12, type: 'image', category: 'SUP', src: null, alt: "Calm water SUP glide" },
+  { id: 13, type: 'image', category: 'Surfing', src: null, alt: "High tide surf action" },
+  { id: 14, type: 'image', category: 'Kayaking', src: null, alt: "Solo mangrove exploration" },
+  { id: 15, type: 'image', category: 'SUP', src: null, alt: "Ocean horizon paddle" }
 ];
 
 const categories = ["All", "Surfing", "Kayaking", "SUP"];
@@ -41,8 +31,11 @@ const Gallery = () => {
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isInView, setIsInView] = useState(false);
 
+  const sectionRef = useRef(null);
   const trackRef = useRef(null);
+  const halfWidthRef = useRef(0);
   const dragStateRef = useRef({ active: false, startX: 0, startScrollLeft: 0, moved: false });
   const resumeTimerRef = useRef(null);
 
@@ -52,6 +45,34 @@ const Gallery = () => {
 
   const shouldLoop = filteredData.length >= 3;
   const displayItems = shouldLoop ? [...filteredData, ...filteredData] : filteredData;
+
+  // Pause auto-scroll completely when Gallery is off-screen
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setIsInView(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { rootMargin: '100px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Cache track half-width so rAF never forces layout reads every frame
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const measure = () => {
+      halfWidthRef.current = track.scrollWidth / 2;
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(track);
+    return () => ro.disconnect();
+  }, [activeFilter]);
 
   const pauseTemporarily = useCallback((durationMs = 1200) => {
     setIsPaused(true);
@@ -75,9 +96,9 @@ const Gallery = () => {
     }
   };
 
-  // Fast, continuous seamless auto-scroll via requestAnimationFrame (delta-time normalized)
+  // Fast, continuous seamless auto-scroll via requestAnimationFrame (only while visible)
   useEffect(() => {
-    if (shouldReduceMotion || !shouldLoop || isPaused || isDragging || selectedMedia) {
+    if (shouldReduceMotion || !shouldLoop || !isInView || isPaused || isDragging || selectedMedia) {
       return;
     }
 
@@ -97,7 +118,7 @@ const Gallery = () => {
       if (step >= 1) {
         carry -= step;
         track.scrollLeft += step;
-        const halfWidth = track.scrollWidth / 2;
+        const halfWidth = halfWidthRef.current;
         if (halfWidth > 0 && track.scrollLeft >= halfWidth) {
           track.scrollLeft -= halfWidth;
         }
@@ -108,7 +129,7 @@ const Gallery = () => {
 
     rafId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId);
-  }, [shouldReduceMotion, shouldLoop, isPaused, isDragging, selectedMedia, activeFilter]);
+  }, [shouldReduceMotion, shouldLoop, isInView, isPaused, isDragging, selectedMedia, activeFilter]);
 
   // Keyboard navigation & Escape close inside Lightbox
   useEffect(() => {
@@ -205,7 +226,7 @@ const Gallery = () => {
   };
 
   return (
-    <section className="py-20 bg-gray-50 relative overflow-hidden">
+    <section ref={sectionRef} className="py-20 bg-gray-50 relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12">
         {/* Header */}
         <div className="text-center mb-10">
@@ -310,17 +331,25 @@ const Gallery = () => {
                 }
               }}
               aria-label={`Open ${item.alt}`}
-              className="group relative flex-shrink-0 w-[260px] sm:w-[300px] md:w-[336px] aspect-square rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl border-2 border-white hover:border-turquoise transition-all duration-300 bg-gray-200 focus:outline-none focus:ring-2 focus:ring-oceanBlue"
+              className="group relative flex-shrink-0 w-[260px] sm:w-[300px] md:w-[336px] aspect-square rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl border-2 border-white hover:border-turquoise transition-all duration-300 bg-gradient-to-br from-deepBlue via-oceanBlue to-turquoise/80 focus:outline-none focus:ring-2 focus:ring-oceanBlue"
             >
-              <img
-                src={item.src}
-                alt={item.alt}
-                loading="lazy"
-                draggable={false}
-                width={336}
-                height={336}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none"
-              />
+              {item.src ? (
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  loading="lazy"
+                  draggable={false}
+                  width={336}
+                  height={336}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center p-6 text-center">
+                  <p className="text-white font-bold text-lg md:text-xl leading-snug drop-shadow-md">
+                    {item.alt}
+                  </p>
+                </div>
+              )}
 
               {/* Category Pill */}
               <div className="absolute top-3.5 left-3.5 bg-white/90 backdrop-blur-sm text-deepBlue text-xs font-bold px-3 py-1 rounded-full shadow-sm">
@@ -334,19 +363,21 @@ const Gallery = () => {
                 </div>
               )}
 
-              {/* Bottom Caption + Hover Play */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent flex flex-col justify-end p-5 transition-opacity duration-300">
-                {item.type === 'video' && (
-                  <div className="absolute inset-0 flex items-center justify-center opacity-85 group-hover:opacity-100 transition-opacity">
-                    <div className="w-14 h-14 rounded-full bg-white/25 backdrop-blur-md border border-white/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <FaPlay className="text-white text-xl ml-1 drop-shadow-lg" aria-hidden="true" />
+              {/* Bottom Caption + Hover Play (shown over real images) */}
+              {item.src && (
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent flex flex-col justify-end p-5 transition-opacity duration-300">
+                  {item.type === 'video' && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-85 group-hover:opacity-100 transition-opacity">
+                      <div className="w-14 h-14 rounded-full bg-white/25 backdrop-blur-md border border-white/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <FaPlay className="text-white text-xl ml-1 drop-shadow-lg" aria-hidden="true" />
+                      </div>
                     </div>
-                  </div>
-                )}
-                <p className="text-white font-bold text-base md:text-lg leading-snug drop-shadow-md">
-                  {item.alt}
-                </p>
-              </div>
+                  )}
+                  <p className="text-white font-bold text-base md:text-lg leading-snug drop-shadow-md">
+                    {item.alt}
+                  </p>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -411,7 +442,14 @@ const Gallery = () => {
                 className="relative max-w-5xl w-full max-h-full flex items-center justify-center"
                 onClick={(e) => e.stopPropagation()}
               >
-                {selectedMedia.type === 'image' ? (
+                {!selectedMedia.src ? (
+                  <div className="w-full max-w-2xl aspect-video bg-gradient-to-br from-deepBlue via-oceanBlue to-turquoise/80 rounded-2xl shadow-2xl flex flex-col items-center justify-center p-10 text-center border border-white/20">
+                    <span className="text-xs font-bold uppercase tracking-widest bg-white/20 text-white px-4 py-1 rounded-full mb-4">
+                      {selectedMedia.category}
+                    </span>
+                    <p className="text-white text-2xl md:text-3xl font-bold">{selectedMedia.alt}</p>
+                  </div>
+                ) : selectedMedia.type === 'image' ? (
                   <img
                     src={selectedMedia.src}
                     alt={selectedMedia.alt}
