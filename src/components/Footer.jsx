@@ -3,12 +3,12 @@ import { Link } from 'react-scroll';
 import { FaFacebookF, FaInstagram, FaWater, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 import { BsWhatsapp } from 'react-icons/bs';
 
-const Footer = () => {
+const Footer = ({ isDetailPage = false, onNavigateSection }) => {
   const currentYear = new Date().getFullYear();
   const whatsappUrl = "https://wa.me/919791351801?text=Hello%20East%20Coast%20Surf%20and%20Paddle%2C%0A%0AI%20came%20across%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20ocean%20adventures%20and%20pricing.%0A%0APlease%20share%20the%20details.%0A%0AThank%20you.";
 
   return (
-    <footer className="bg-slate-900 text-white pt-16 pb-8 border-t-4 border-vibrantAccent">
+    <footer className="relative z-20 bg-slate-900 text-white pt-16 pb-8 border-t-4 border-vibrantAccent shadow-[0_-18px_50px_rgba(0,0,0,0.25)]">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-10 border-b border-white/20 pb-10">
           
@@ -49,15 +49,25 @@ const Footer = () => {
             <ul className="space-y-3">
               {['Home', 'Adventures', 'Gallery', 'Testimonials', 'Contact'].map((link) => (
                 <li key={link}>
-                  <Link 
-                    to={link.toLowerCase()} 
-                    smooth={true} 
-                    duration={500} 
-                    offset={-70}
-                    className="text-gray-300 hover:text-vibrantAccent cursor-pointer transition-colors"
-                  >
-                    {link}
-                  </Link>
+                  {isDetailPage ? (
+                    <button
+                      type="button"
+                      onClick={() => onNavigateSection?.(link.toLowerCase())}
+                      className="text-gray-300 hover:text-vibrantAccent cursor-pointer transition-colors"
+                    >
+                      {link}
+                    </button>
+                  ) : (
+                    <Link 
+                      to={link.toLowerCase()} 
+                      smooth={true} 
+                      duration={500} 
+                      offset={-70}
+                      className="text-gray-300 hover:text-vibrantAccent cursor-pointer transition-colors"
+                    >
+                      {link}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

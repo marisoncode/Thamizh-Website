@@ -1,163 +1,80 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { FaArrowRight } from 'react-icons/fa';
+import { LESSONS } from '../data/lessons';
 
-import surfingImg from '../assets/surfing.webp';
-import supImg from '../assets/standup_paddle.webp';
-import singleKayakImg from '../assets/single_kayaking.webp';
-import doubleKayakImg from '../assets/double_kayaking.webp';
 import kidKayakImg from '../assets/kidkayak.webp';
-import manKayakImg from '../assets/mankayak.webp';
 import manSurfImg from '../assets/mansurf.webp';
 
-const AdventureCard = ({ adv, index }) => (
-  <motion.div
+const LessonCard = ({ lesson, index, onSelectLesson }) => (
+  <motion.button
+    type="button"
+    onClick={() => onSelectLesson?.(lesson.slug)}
     initial={{ opacity: 0, y: 50 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-50px" }}
+    viewport={{ once: true, margin: '-50px' }}
     transition={{ duration: 0.6, delay: index * 0.1 }}
-    whileHover={{ y: -20, scale: 1.03 }}
-    className="bg-white rounded-3xl overflow-hidden shadow-xl border-2 border-transparent hover:border-turquoise hover:shadow-[0_20px_40px_rgba(37,211,102,0.3)] transition-all duration-300 flex flex-col group"
+    whileHover={{ y: -16, scale: 1.03 }}
+    className="bg-white rounded-3xl overflow-hidden shadow-xl border-2 border-transparent hover:border-turquoise hover:shadow-[0_20px_40px_rgba(37,211,102,0.3)] transition-all duration-300 flex flex-col group text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-oceanBlue"
   >
-    <div className="relative h-64 overflow-hidden">
-      <img 
-        src={adv.image} 
-        alt={`${adv.title} in Puducherry`} 
+    <div className="relative h-64 w-full overflow-hidden">
+      <img
+        src={lesson.image}
+        alt={`${lesson.title} lessons in Puducherry`}
         loading="lazy"
         width={400}
         height={256}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
       {/* Price Badge (Top Right) */}
       <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg font-extrabold text-oceanBlue border border-gray-100">
-        {adv.price}
+        {lesson.startingPrice}
       </div>
       {/* Timing Badge (Bottom Left, on image) */}
       <div className="absolute bottom-4 left-4 bg-deepBlue/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg font-semibold text-sm text-white flex items-center gap-2 border border-white/20">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-vibrantAccent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-vibrantAccent" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        90 mins
+        {lesson.duration}
       </div>
     </div>
-    
-    <div className="p-8 flex-grow flex flex-col text-center justify-center">
-      <h3 className="text-2xl font-bold text-gray-800 mb-3">{adv.title}</h3>
-      <p className="text-gray-600 flex-grow leading-relaxed">{adv.description}</p>
+
+    <div className="p-8 flex-grow flex flex-col items-center text-center justify-between w-full">
+      <div>
+        <span className="text-xs font-bold uppercase tracking-widest text-oceanBlue">
+          {lesson.subtitle}
+        </span>
+        <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mt-1 mb-3">
+          {lesson.title}
+        </h3>
+        <p className="text-gray-600 leading-relaxed mb-6">
+          {lesson.shortDescription}
+        </p>
+      </div>
+
+      <span className="inline-flex items-center gap-2 font-bold text-oceanBlue group-hover:text-deepBlue transition-colors">
+        Explore {lesson.title}
+        <FaArrowRight className="text-sm group-hover:translate-x-1.5 transition-transform duration-300" aria-hidden="true" />
+      </span>
     </div>
-  </motion.div>
+  </motion.button>
 );
 
-const Adventures = () => {
-  const surfingAdventures = [
-    {
-      id: 1,
-      title: "Group Surfing Lessons",
-      image: surfingImg,
-      description: "Learn to ride the waves in a fun group environment.",
-      price: "Rs. 1600"
-    },
-    {
-      id: 2,
-      title: "Private Surfing Lessons",
-      image: surfingImg,
-      description: "Get personalized 1-on-1 coaching to master surfing faster.",
-      price: "Rs. 2000"
-    },
-    {
-      id: 3,
-      title: "Stand-Up Paddling (SUP)",
-      image: supImg,
-      description: "Enjoy peaceful paddling while exploring the beauty of the sea.",
-      price: "Rs. 1800"
-    }
-  ];
-
-  const kayakingAdventures = [
-    {
-      id: 4,
-      title: "Single Seater Sea Kayaking",
-      image: singleKayakImg,
-      description: "Perfect for solo adventurers who love exploring the water.",
-      price: "Rs. 1500"
-    },
-    {
-      id: 5,
-      title: "Double Seater Sea Kayaking",
-      image: doubleKayakImg,
-      description: "Share the adventure and enjoy memorable moments together.",
-      price: "Rs. 2500"
-    },
-    {
-      id: 6,
-      title: "Mangrove Single Seater",
-      image: singleKayakImg,
-      description: "Explore the serene mangroves at your own pace.",
-      price: "Rs. 1200"
-    },
-    {
-      id: 7,
-      title: "Mangrove Double Seater",
-      image: doubleKayakImg,
-      description: "Paddle through the beautiful mangroves with a partner.",
-      price: "Rs. 2500"
-    }
-  ];
-
+const Adventures = ({ onSelectLesson }) => {
   return (
-    <section id="adventures" className="py-20 bg-gray-50 relative overflow-hidden">
+    <section className="py-20 bg-gray-50 relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 relative">
-        
-        {/* SECTION 1: Surfing & SUP */}
-        <div className="text-center mb-12 relative overflow-visible mt-10">
-          
-          {/* Static Man Surf Decoration - centered on mobile, absolute on md+ */}
-          <img
-            src={manSurfImg}
-            alt="Man Surfing"
-            aria-hidden="true"
-            loading="lazy"
-            width={224}
-            height={224}
-            className="block mx-auto mb-2 md:absolute md:mb-0 md:-top-16 lg:-top-24 md:left-0 lg:left-10 w-28 sm:w-36 md:w-48 lg:w-56 object-contain drop-shadow-2xl z-20 pointer-events-none"
-            style={{ transform: 'scaleX(-1)' }}
-          />
-
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-deepBlue mb-4"
-          >
-            Surfing & Stand-Up Paddling
-          </motion.h2>
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="w-24 h-1 bg-vibrantAccent mx-auto rounded-full"
-          ></motion.div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20 max-w-6xl mx-auto">
-          {surfingAdventures.map((adv, index) => (
-            <AdventureCard key={adv.id} adv={adv} index={index} />
-          ))}
-        </div>
-
-        {/* SECTION 2: Sea Kayaking & Mangroves */}
-        <div className="text-center mb-12 relative overflow-visible mt-20">
-
-          {/* Kayak decorations - side by side centered on mobile, absolute on md+ */}
+        <div className="text-center mb-14 relative overflow-visible mt-10">
+          {/* Decorative ocean cutouts - centered on mobile, flanking on md+ */}
           <div className="flex justify-center gap-4 mb-2 md:contents">
             <img
-              src={manKayakImg}
-              alt="Man Kayaking"
+              src={manSurfImg}
+              alt="Man Surfing"
               aria-hidden="true"
               loading="lazy"
               width={224}
               height={224}
-              className="w-28 sm:w-36 md:w-48 lg:w-56 object-contain drop-shadow-2xl z-20 pointer-events-none md:absolute md:-top-10 lg:-top-20 md:left-0 lg:left-10"
+              className="w-28 sm:w-36 md:w-48 lg:w-56 object-contain drop-shadow-2xl z-20 pointer-events-none md:absolute md:-top-16 lg:-top-24 md:left-0 lg:left-10"
               style={{ transform: 'scaleX(-1)' }}
             />
             <img
@@ -171,16 +88,16 @@ const Adventures = () => {
             />
           </div>
 
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="text-4xl md:text-5xl font-bold text-deepBlue mb-4"
           >
-            Discover Sea Kayaking
+            Our Ocean Lessons
           </motion.h2>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -188,12 +105,17 @@ const Adventures = () => {
           ></motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {kayakingAdventures.map((adv, index) => (
-            <AdventureCard key={adv.id} adv={adv} index={index} />
+        {/* 3 Core Lessons: Surfing, SUP & Kayaking */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {LESSONS.map((lesson, index) => (
+            <LessonCard
+              key={lesson.slug}
+              lesson={lesson}
+              index={index}
+              onSelectLesson={onSelectLesson}
+            />
           ))}
         </div>
-
       </div>
     </section>
   );

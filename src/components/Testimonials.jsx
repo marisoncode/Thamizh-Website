@@ -61,7 +61,6 @@ const Testimonials = () => {
 
   return (
     <section 
-      id="testimonials" 
       className="py-24 bg-deepBlue relative overflow-visible"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}

@@ -4,38 +4,58 @@ import { FaBars, FaTimes, FaFileAlt } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoImg from '../assets/logo.webp';
 
-const Navbar = () => {
+const NAV_LINKS = [
+  { name: 'Home', to: 'home' },
+  { name: 'Adventures', to: 'adventures' },
+  { name: 'Gallery', to: 'gallery' },
+  { name: 'Testimonials', to: 'testimonials' },
+  { name: 'Contact', to: 'contact' },
+];
+
+const Navbar = ({ isDetailPage = false, onNavigateSection }) => {
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   
   const whatsappUrl = "https://wa.me/919791351801?text=Hello%20East%20Coast%20Surf%20and%20Paddle%2C%0A%0AI%20came%20across%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20ocean%20adventures%20and%20pricing.%0A%0APlease%20share%20the%20details.%0A%0AThank%20you.";
   const registrationFormUrl = "https://forms.gle/nUiZFAVKDzUiq4w28";
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+      setScrolled(window.scrollY > 50);
 
-  const navLinks = [
-    { name: 'Home', to: 'home' },
-    { name: 'Adventures', to: 'adventures' },
-    { name: 'Gallery', to: 'gallery' },
-    { name: 'Testimonials', to: 'testimonials' },
-    { name: 'Contact', to: 'contact' },
-  ];
+      if (isDetailPage) {
+        setActiveSection('adventures');
+        return;
+      }
+
+      let current = 'home';
+      for (const link of NAV_LINKS) {
+        const el = document.getElementById(link.to);
+        if (el && el.getBoundingClientRect().top <= 160) {
+          current = link.to;
+        }
+      }
+      setActiveSection(current);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isDetailPage]);
+
+  const handleLogoClick = () => {
+    if (isDetailPage && onNavigateSection) {
+      onNavigateSection('home');
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <nav className={`sticky top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-1' : 'bg-white py-2'}`}>
       <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
         {/* Logo */}
-        <div className="flex items-center gap-2 md:gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <div className="flex items-center gap-2 md:gap-3 cursor-pointer" onClick={handleLogoClick}>
           <img src={logoImg} alt="East Coast Surf & Paddle Logo" width={80} height={80} className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-md" />
           <span className="text-base md:text-xl font-bold tracking-wide text-deepBlue leading-tight drop-shadow-sm">
             East Coast<br/>
@@ -46,19 +66,35 @@ const Navbar = () => {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-6 lg:gap-8">
           <ul className="flex gap-5 lg:gap-6">
-            {navLinks.map((link, index) => (
-              <li key={index}>
-                <Link
-                  to={link.to}
-                  spy={true}
-                  smooth={true}
-                  duration={500}
-                  offset={-100}
-                  activeClass="!text-oceanBlue border-b-2 border-oceanBlue"
-                  className="cursor-pointer font-bold text-gray-800 hover:text-oceanBlue transition-colors border-b-2 border-transparent pb-1"
-                >
-                  {link.name}
-                </Link>
+            {NAV_LINKS.map((link) => (
+              <li key={link.to}>
+                {isDetailPage ? (
+                  <button
+                    type="button"
+                    onClick={() => onNavigateSection?.(link.to)}
+                    className={`cursor-pointer font-bold hover:text-oceanBlue transition-colors border-b-2 pb-1 ${
+                      activeSection === link.to
+                        ? '!text-oceanBlue border-oceanBlue'
+                        : 'text-gray-800 border-transparent'
+                    }`}
+                  >
+                    {link.name}
+                  </button>
+                ) : (
+                  <Link
+                    to={link.to}
+                    smooth={true}
+                    duration={500}
+                    offset={-80}
+                    className={`cursor-pointer font-bold hover:text-oceanBlue transition-colors border-b-2 pb-1 ${
+                      activeSection === link.to
+                        ? '!text-oceanBlue border-oceanBlue'
+                        : 'text-gray-800 border-transparent'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -132,20 +168,39 @@ const Navbar = () => {
                   </button>
                 </div>
                 <ul className="flex flex-col py-2">
-                  {navLinks.map((link, index) => (
-                    <li key={index} className="w-full">
-                      <Link
-                        to={link.to}
-                        spy={true}
-                        smooth={true}
-                        duration={500}
-                        offset={-100}
-                        activeClass="!text-oceanBlue border-l-4 border-oceanBlue bg-gray-50"
-                        onClick={() => setNavOpen(false)}
-                        className="block w-full py-3.5 px-8 text-lg font-bold text-gray-800 hover:text-oceanBlue border-l-4 border-transparent transition-all"
-                      >
-                        {link.name}
-                      </Link>
+                  {NAV_LINKS.map((link) => (
+                    <li key={link.to} className="w-full">
+                      {isDetailPage ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setNavOpen(false);
+                            onNavigateSection?.(link.to);
+                          }}
+                          className={`block w-full text-left py-3.5 px-8 text-lg font-bold hover:text-oceanBlue border-l-4 transition-all ${
+                            activeSection === link.to
+                              ? '!text-oceanBlue border-oceanBlue bg-gray-50'
+                              : 'text-gray-800 border-transparent'
+                          }`}
+                        >
+                          {link.name}
+                        </button>
+                      ) : (
+                        <Link
+                          to={link.to}
+                          smooth={true}
+                          duration={500}
+                          offset={-80}
+                          onClick={() => setNavOpen(false)}
+                          className={`block w-full py-3.5 px-8 text-lg font-bold hover:text-oceanBlue border-l-4 transition-all ${
+                            activeSection === link.to
+                              ? '!text-oceanBlue border-oceanBlue bg-gray-50'
+                              : 'text-gray-800 border-transparent'
+                          }`}
+                        >
+                          {link.name}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>

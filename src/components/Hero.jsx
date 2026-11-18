@@ -1,71 +1,109 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-scroll';
+import { FaArrowRight } from 'react-icons/fa';
 
 import heroBg from '../assets/elegant_hero_bg.webp';
-import surfingImg from '../assets/surfing.webp';
-import supImg from '../assets/standup_paddle.webp';
-import singleKayakImg from '../assets/single_kayaking.webp';
-import doubleKayakImg from '../assets/double_kayaking.webp';
+import surfHeroImg from '../assets/Hero Section Images/SURF.jpeg';
+import supHeroImg from '../assets/Hero Section Images/SUPP.jpeg';
+import kayakHeroImg from '../assets/Hero Section Images/KAYAK.jpeg';
 
-const Hero = () => {
+const HERO_SPRING = { stiffness: 120, damping: 28, mass: 0.6, restDelta: 0.001 };
+
+const HERO_CARDS = [
+  {
+    title: 'Surfing',
+    subtitle: 'Ride the Waves',
+    lessonSlug: 'surfing',
+    img: surfHeroImg,
+    delay: 0.15,
+    staggerClass: 'md:translate-y-4',
+  },
+  {
+    title: 'SUP',
+    subtitle: 'Stand-Up Paddle',
+    lessonSlug: 'sup',
+    img: supHeroImg,
+    delay: 0.3,
+    staggerClass: 'md:-translate-y-4',
+  },
+  {
+    title: 'Kayaking',
+    subtitle: 'Sea & Mangroves',
+    lessonSlug: 'kayaking',
+    img: kayakHeroImg,
+    delay: 0.45,
+    staggerClass: 'md:translate-y-4',
+  },
+];
+
+const Hero = ({ onSelectLesson }) => {
+  const shouldReduceMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  const smoothScrollY = useSpring(scrollY, HERO_SPRING);
+  const bgScale = useTransform(smoothScrollY, [0, 700], [1, 1.12]);
+
   const whatsappUrl = "https://wa.me/919791351801?text=Hello%20East%20Coast%20Surf%20and%20Paddle%2C%0A%0AI%20came%20across%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20ocean%20adventures%20and%20pricing.%0A%0APlease%20share%20the%20details.%0A%0AThank%20you.";
 
-  const floatingCards = [
-    { title: "Surfing", img: surfingImg, delay: 0.2, yOffset: -20 },
-    { title: "Stand-Up Paddling", img: supImg, delay: 0.4, yOffset: 20 },
-    { title: "Single Kayaking", img: singleKayakImg, delay: 0.6, yOffset: -10 },
-    { title: "Double Kayaking", img: doubleKayakImg, delay: 0.8, yOffset: 30 },
-  ];
-
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 pb-10 overflow-hidden">
+    <section className="relative min-h-[calc(100vh-80px)] md:h-[calc(100vh-96px)] md:min-h-[540px] bg-deepBlue flex items-center justify-center py-8 md:py-6 overflow-hidden">
       {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroBg})` }}
+      <motion.div
+        style={shouldReduceMotion ? undefined : { scale: bgScale }}
+        className="absolute inset-0 z-0 will-change-transform"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-deepBlue/90 via-oceanBlue/70 to-transparent"></div>
-      </div>
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroBg})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-deepBlue/90 via-oceanBlue/70 to-deepBlue/30"></div>
+      </motion.div>
 
-      <div className="container mx-auto px-6 md:px-12 relative z-10 flex flex-col lg:flex-row items-center">
-        
-        {/* Text Content */}
-        <motion.div 
-          initial={{ opacity: 0, x: -50 }}
+      <div className="container mx-auto px-6 md:px-12 relative z-10 flex flex-col lg:flex-row items-center gap-8 lg:gap-10">
+        {/* Left: Text Content */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="lg:w-1/2 text-white mb-16 lg:mb-0 -translate-y-4 md:-translate-y-10"
+          transition={{ duration: 0.7 }}
+          className="lg:w-1/2 text-white"
         >
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 text-white tracking-tight"
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold leading-tight mb-5 text-white tracking-tight"
             style={{ textShadow: "0px 10px 30px rgba(0,0,0,0.8)" }}
           >
-            Surfing & Paddling Adventures in <br className="hidden md:block" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-500 drop-shadow-lg">Pondicherry</span>
+            Surfing & Paddling Adventures in <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-500 drop-shadow-lg">
+              Pondicherry
+            </span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-base sm:text-lg md:text-xl text-gray-200 mb-10 max-w-lg"
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="text-base sm:text-lg md:text-xl text-gray-200 mb-8 max-w-lg"
           >
             Surf the waves, paddle through paradise, and create unforgettable memories with East Coast Surf and Paddle.
           </motion.p>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.7, delay: 0.45 }}
             className="flex flex-wrap items-center gap-4"
           >
             <Link to="adventures" smooth={true} duration={500} offset={-70} className="flex">
-              <button className="inline-flex items-center justify-center px-8 py-3 md:py-4 md:px-10 text-base md:text-lg font-bold bg-oceanBlue text-white rounded-full hover:bg-turquoise hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-lg border border-oceanBlue">
+              <button className="inline-flex items-center justify-center px-7 py-3 md:py-3.5 md:px-9 text-base md:text-lg font-bold bg-oceanBlue text-white rounded-full hover:bg-turquoise hover:-translate-y-1 hover:scale-105 transition-all duration-300 shadow-lg border border-oceanBlue cursor-pointer">
                 Explore Adventures
               </button>
             </Link>
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="relative inline-flex items-center justify-center px-8 py-3 md:py-4 md:px-10 text-base md:text-lg font-bold text-deepBlue transition-all duration-300 bg-white rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_30px_rgba(0,212,255,0.8)] hover:-translate-y-1 hover:scale-105 overflow-hidden group">
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative inline-flex items-center justify-center px-7 py-3 md:py-3.5 md:px-9 text-base md:text-lg font-bold text-deepBlue transition-all duration-300 bg-white rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_0_30px_rgba(0,212,255,0.8)] hover:-translate-y-1 hover:scale-105 overflow-hidden group"
+            >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white via-[#e0f7fa] to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></span>
               <span className="relative flex items-center gap-2">
                 Book Now
@@ -77,41 +115,49 @@ const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* Floating Cards */}
-        <div className="lg:w-1/2 w-full relative h-[400px] md:h-[500px]">
-          <div className="grid grid-cols-2 gap-4 h-full relative">
-            {floatingCards.map((card, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: card.yOffset }}
-                transition={{ 
-                  duration: 0.8, 
-                  delay: card.delay,
-                  type: "spring", 
-                  stiffness: 100 
-                }}
-                whileHover={{ scale: 1.05, rotate: -2, zIndex: 20 }}
-                className="relative rounded-2xl overflow-hidden shadow-2xl group cursor-pointer border-2 border-white/20 hover:border-turquoise hover:shadow-[0_0_20px_rgba(37,211,102,0.5)] transition-all duration-300"
-                style={{ height: '80%' }}
-              >
-                <img 
-                  src={card.img} 
-                  alt={`${card.title} classes in Puducherry`} 
-                  loading={idx < 2 ? "eager" : "lazy"}
-                  width={300}
-                  height={400}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div className="absolute bottom-4 left-4 right-4 text-center">
-                  <h3 className="text-white font-bold text-lg">{card.title}</h3>
-                </div>
-              </motion.div>
+        {/* Right: 3 Clean Editorial Lesson Cards (Surf, SUP, Kayak) */}
+        <div className="lg:w-1/2 w-full">
+          <div className="grid grid-cols-3 gap-3 sm:gap-4 h-[230px] sm:h-[310px] md:h-[380px] lg:h-[420px]">
+            {HERO_CARDS.map((card, idx) => (
+              <div key={card.lessonSlug} className={`h-full ${card.staggerClass}`}>
+                <motion.button
+                  type="button"
+                  onClick={() => onSelectLesson?.(card.lessonSlug)}
+                  initial={shouldReduceMotion ? false : { opacity: 0, y: 36 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.65, delay: card.delay, ease: 'easeOut' }}
+                  whileHover={shouldReduceMotion ? undefined : { y: -10, scale: 1.03 }}
+                  aria-label={`Explore ${card.title} lessons`}
+                  className="relative h-full w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl group cursor-pointer border-2 border-white/25 hover:border-turquoise hover:shadow-[0_20px_45px_rgba(0,0,0,0.5),0_0_25px_rgba(56,189,248,0.45)] transition-all duration-300 text-left focus:outline-none focus:ring-2 focus:ring-turquoise"
+                >
+                  <img
+                    src={card.img}
+                    alt={`${card.title} adventures in Puducherry`}
+                    loading={idx < 2 ? 'eager' : 'lazy'}
+                    width={300}
+                    height={420}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                  <div className="absolute bottom-3 sm:bottom-5 left-2.5 sm:left-4 right-2.5 sm:right-4">
+                    <span className="hidden sm:block text-[11px] font-semibold uppercase tracking-wider text-turquoise/90 mb-0.5">
+                      {card.subtitle}
+                    </span>
+                    <div className="flex items-center justify-between gap-1">
+                      <h3 className="text-white font-bold text-sm sm:text-lg md:text-xl leading-tight drop-shadow-md">
+                        {card.title}
+                      </h3>
+                      <FaArrowRight
+                        className="hidden sm:block text-xs text-turquoise opacity-80 group-hover:translate-x-1 group-hover:opacity-100 transition-all flex-shrink-0"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                </motion.button>
+              </div>
             ))}
           </div>
         </div>
-
       </div>
     </section>
   );
